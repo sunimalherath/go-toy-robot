@@ -1,18 +1,13 @@
 package robot
 
-import "fmt"
+import (
+	"fmt"
 
-type direction string
-
-const (
-	NORTH direction = "north"
-	SOUTH direction = "south"
-	EAST  direction = "east"
-	WEST  direction = "west"
+	"github.com/sunimalherath/go-toy-robot/util"
 )
 
 type IRobot interface {
-	Place(int, int, direction) bool
+	Place(int, int, util.Direction) bool
 	Move() bool
 	TurnLeft()
 	TurnRight()
@@ -23,10 +18,10 @@ type robot struct {
 	OnTheTable      bool
 	XPosition       int
 	YPosition       int
-	FacingDirection direction
+	FacingDirection util.Direction
 }
 
-func (r *robot) Place(x, y int, facing direction) bool {
+func (r *robot) Place(x, y int, facing util.Direction) bool {
 	r.XPosition = x
 	r.YPosition = y
 	r.FacingDirection = facing
@@ -35,16 +30,16 @@ func (r *robot) Place(x, y int, facing direction) bool {
 
 func (r *robot) Move() bool {
 	switch r.FacingDirection {
-	case NORTH:
+	case util.NORTH:
 		r.YPosition++
 		return true
-	case SOUTH:
+	case util.SOUTH:
 		r.YPosition--
 		return true
-	case EAST:
+	case util.EAST:
 		r.XPosition++
 		return true
-	case WEST:
+	case util.WEST:
 		r.XPosition--
 		return true
 	default:
@@ -54,41 +49,30 @@ func (r *robot) Move() bool {
 
 func (r *robot) TurnLeft() {
 	switch r.FacingDirection {
-	case NORTH:
-		r.FacingDirection = WEST
-	case SOUTH:
-		r.FacingDirection = EAST
-	case EAST:
-		r.FacingDirection = NORTH
-	case WEST:
-		r.FacingDirection = SOUTH
+	case util.NORTH:
+		r.FacingDirection = util.WEST
+	case util.SOUTH:
+		r.FacingDirection = util.EAST
+	case util.EAST:
+		r.FacingDirection = util.NORTH
+	case util.WEST:
+		r.FacingDirection = util.SOUTH
 	}
 }
 
 func (r *robot) TurnRight() {
 	switch r.FacingDirection {
-	case NORTH:
-		r.FacingDirection = EAST
-	case SOUTH:
-		r.FacingDirection = WEST
-	case EAST:
-		r.FacingDirection = SOUTH
-	case WEST:
-		r.FacingDirection = NORTH
+	case util.NORTH:
+		r.FacingDirection = util.EAST
+	case util.SOUTH:
+		r.FacingDirection = util.WEST
+	case util.EAST:
+		r.FacingDirection = util.SOUTH
+	case util.WEST:
+		r.FacingDirection = util.NORTH
 	}
 }
 
 func (r *robot) PrintReport() {
 	fmt.Printf(`robot's X position: %d and Y position: %d, facing: %s`, r.XPosition, r.YPosition, r.FacingDirection)
-}
-
-func (r robot) isValidPlacement(x, y int) bool {
-	// check if the robot is placed within the 5 x 5 grid
-	if x < 0 || x > 4 {
-		return false
-	}
-	if y < 0 || y > 4 {
-		return false
-	}
-	return true
 }
