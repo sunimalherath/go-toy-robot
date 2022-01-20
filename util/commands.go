@@ -1,6 +1,14 @@
 package util
 
-func IsValidPlacement(x, y int) bool {
+type IValidator interface {
+	IsValidPlacement(int, int) bool
+	IsValidCommand(command) bool
+	IsValidMove(int, int, Direction) bool
+}
+
+type SupportCommand struct{}
+
+func (s SupportCommand) IsValidPlacement(x, y int) bool {
 	// check if the robot is placed within the 5 x 5 grid
 	if x < 0 || x > 4 {
 		return false
@@ -11,7 +19,7 @@ func IsValidPlacement(x, y int) bool {
 	return true
 }
 
-func IsValidCommand(cmd command) bool {
+func (s SupportCommand) IsValidCommand(cmd command) bool {
 	validCommands := []command{PLACE, MOVE, LEFT, RIGHT, REPORT}
 	for _, v := range validCommands {
 		if cmd == v {
@@ -21,17 +29,21 @@ func IsValidCommand(cmd command) bool {
 	return false
 }
 
-func IsValidMove(x, y int, facingDirection Direction) bool {
+func (s SupportCommand) IsValidMove(x, y int, facingDirection Direction) bool {
 	switch facingDirection {
 	case NORTH:
-		return IsValidPlacement(x, y+1)
+		return s.IsValidPlacement(x, y+1)
 	case SOUTH:
-		return IsValidPlacement(x, y-1)
+		return s.IsValidPlacement(x, y-1)
 	case EAST:
-		return IsValidPlacement(x+1, y)
+		return s.IsValidPlacement(x+1, y)
 	case WEST:
-		return IsValidPlacement(x-1, y)
+		return s.IsValidPlacement(x-1, y)
 	default:
 		return false
 	}
+}
+
+func NewSupportCommand() IValidator {
+	return &SupportCommand{}
 }

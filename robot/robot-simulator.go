@@ -76,3 +76,7 @@ func (r *robot) TurnRight() {
 func (r *robot) PrintReport() {
 	fmt.Printf(`robot's X position: %d and Y position: %d, facing: %s`, r.XPosition, r.YPosition, r.FacingDirection)
 }
+
+func NewRobot() IRobot {
+	return &robot{}
+}
